@@ -48,6 +48,8 @@ lerna-debug.log*
 
 # Runtime data
 /users.json
+/books.json
+/uploads
 pids
 *.pid
 *.seed

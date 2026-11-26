@@ -1,5 +1,6 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { RegisterUserDto } from './dto/register-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 import { DbService } from '../db/db.service';
 import { User } from './entities/user.entity';
 
@@ -21,5 +22,19 @@ export class UserService {
 
     await this.dbService.write(users);
     return user;
+  }
+
+  async login(loginUserDto: LoginUserDto) {
+    const users: User[] = await this.dbService.read();
+    const foundUser = users.find(item => item.username === loginUserDto.username);
+    if (!foundUser) {
+      throw new BadRequestException('该用户尚未注册');
+    }
+
+    if (foundUser.password !== loginUserDto.password) {
+      throw new BadRequestException('密码不正确');
+    }
+
+    return foundUser;
   }
 }
